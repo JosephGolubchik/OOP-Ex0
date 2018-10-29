@@ -118,8 +118,27 @@ public class Polynom implements Polynom_able{
 
 	@Override
 	public double root(double x0, double x1, double eps) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		double y0 = f(x0);
+		double y1 = f(x1);
+
+		if(y0 * y1 > 0)
+			System.err.println("f(x0) and f(x1) should have different signs");
+		
+		double x_diff = Math.abs(x1- x0);
+		double y_diff = Math.abs(f(x0) - f(x1));
+		
+		if (x_diff > eps || y_diff > eps) {
+			double x_mid = (x0 + x1) / 2;
+			double y_mid = f(x_mid);
+			
+			if(y0 * y_mid <= 0)
+				return root(x0, x_mid, eps);
+			else
+				return root(x_mid, x1, eps);
+		}
+		
+		return x0;
 	}
 
 	@Override
@@ -137,14 +156,25 @@ public class Polynom implements Polynom_able{
 
 	@Override
 	public Polynom_able derivative() {
-		// TODO Auto-generated method stub
-		return null;
+		Polynom der = new Polynom();
+		Iterator<Monom> it = this.iteretor();
+		while (it.hasNext()) {
+			Monom curr = it.next(); // Current Monom
+			Monom cder = curr.derivative(); // Derivative of current Monom
+			der.add(cder);
+		}
+		return der;
 	}
 
 	@Override
 	public double area(double x0, double x1, double eps) {
-		// TODO Auto-generated method stub
-		return 0;
+		// eps is number of rectangles from x0 to x1
+		double sum=0;
+		double width = (x1-x0)/eps; // width of one rectangle
+		for (double i = x0; i <= x1; i=i+width) {
+			sum += width * Math.max(f(i), f(i+width));
+		}
+		return sum;
 	}
 
 	@Override
@@ -153,7 +183,7 @@ public class Polynom implements Polynom_able{
 	}
 
 	/**
-	 * If polynom is empty, return a string on the zero Monom
+	 * If polynom is empty, return a string of the zero Monom
 	 */
 	public String toString() {
 		String ans;

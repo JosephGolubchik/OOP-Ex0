@@ -6,41 +6,21 @@ public class Ex0 {
 
 	public static void main(String[] args) {
 
-		Monom m1 = new Monom (2, 2); //2x^2
-		Monom m2 = new Monom (5, 2); //5x^2
-		Monom m3 = new Monom (5, 5); //5x^5
-//		x.multiply(y);
-//		System.out.println(x.toString());
-//		ArrayList<Monom> list = new ArrayList<>();
-//		Monom_Comperator cmp = new Monom_Comperator();
-//		list.add(m1);
-//		list.add(m2);
-//		list.sort(cmp);
+		Monom m1 = new Monom (5, 3); //2x^2
+		Monom m2 = new Monom (2, 2); //5x^2
+		Monom m3 = new Monom (-2, 1); //5x^5
 
 		Polynom p1 = new Polynom();
-		p1.add(m3);
-		System.out.println("p1: " + p1.toString());
+		p1.add(m1); p1.add(m2); p1.add(m3);
+		System.out.println(p1);
 		
-		Polynom p2 = new Polynom();
-		p2.add(m2);
-//		System.out.println(p2.toString());
+//		System.out.println(p1.area(1, 4, 10));
 		
-//		p1.substract(p2);
-//		System.out.println(p1.toString());
+		System.out.println(p1.root(-1, 0, 0.000001));
 		
-//		p1.multiply(p2);
-//		System.out.println(p1.toString());
-		
-//		System.out.println(p1.equals(p2));
-		
-		Polynom p3 = (Polynom) p1.copy();
-		System.out.println("p3: " + p3.toString());
-		
-		Monom m4 = new Monom(2,5);
-		p1.add(m4);
-		
-		System.out.println("p1: " + p1.toString());
-		System.out.println("p3: " + p3.toString());
+//		Polynom pd = (Polynom) p1.derivative();
+//		System.out.println(pd);
+
 		
 	}
 	
