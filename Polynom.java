@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
+import javax.management.RuntimeErrorException;
+
 import myMath.Monom;
 /**
  * This class represents a Polynom with add, multiply functionality, it also should support the following:
@@ -12,6 +14,7 @@ import myMath.Monom;
  * 3. Derivative
  * 
  * @author Boaz
+ * @author Yosef Golubchik (209195353), Eli Haimov (308019306), Elad Cohen (307993030)
  *
  */
 public class Polynom implements Polynom_able{
@@ -19,7 +22,42 @@ public class Polynom implements Polynom_able{
 	// ********** add your code below ***********
 	
 	ArrayList<Monom> list = new ArrayList<>();
-	
+	/**
+	 * default constructor
+	 */
+	public Polynom(){
+		
+	}
+	/**
+	 * constructs a polynom from a string
+	 * @param s
+	 */
+	public Polynom(String s){
+		this();
+		Polynom p = init_from_string(s);
+		Iterator<Monom> it= p.iteretor();
+		while(it.hasNext()){
+			Monom m = it.next();
+			this.add(m);
+		}
+	}
+	/**
+	 * copy constructor
+	 * @param ot polynom to be copied
+	 */
+	public Polynom(Polynom ot) {
+		this();
+		Iterator<Monom> it= ot.iteretor();
+		while(it.hasNext()){
+			Monom m = it.next();
+			this.add(m);
+		}
+	}
+	/**
+	 * gives value of polynom for a certain x value
+	 * ex: polynom: 5x^2 + 3x + 2, f(3) = 5*3^2 + 3*3 + 2 = 56
+	 * @param x value to be inputed into polynom
+	 */
 	@Override
 	public double f(double x) {
 		double sum = 0;
@@ -29,6 +67,10 @@ public class Polynom implements Polynom_able{
 		return sum;
 	}
 
+	/**
+	 * adds another polynom p1 to given polynom
+	 * @param p1 polynom to be added
+	 */
 	@Override
 	public void add(Polynom_able p1) {
 		Iterator<Monom> it = p1.iteretor();
@@ -168,11 +210,15 @@ public class Polynom implements Polynom_able{
 
 	@Override
 	public double area(double x0, double x1, double eps) {
-		// eps is number of rectangles from x0 to x1
+		if (x1 < x0) {
+			throw new RuntimeException("X0 must be smaller than X1");
+		}
+		// eps is width of rectangle
 		double sum=0;
-		double width = (x1-x0)/eps; // width of one rectangle
-		for (double i = x0; i <= x1; i=i+width) {
-			sum += width * Math.max(f(i), f(i+width));
+		for (double i = x0; i <= x1; i=i+eps) {
+			if (f(i) > 0 && f(i+eps) > 0) {
+				sum += eps * Math.max(f(i), f(i+eps));
+			}
 		}
 		return sum;
 	}
@@ -197,5 +243,20 @@ public class Polynom implements Polynom_able{
 			}
 		}
 		return ans;
+	}
+	private Polynom init_from_string(String s) {
+		if (s == null) {
+			throw new RuntimeException("String is empty");
+		}
+		String[] string_monoms = s.split(" ");
+		Polynom pnew = new Polynom();
+		for (int i = 0; i < string_monoms.length; i++) {
+			String s_monom = string_monoms[i];
+			if (!s_monom.equals("+") ){
+				Monom m = new Monom(s_monom);
+				pnew.add(m);
+			}
+		}
+		return pnew;
 	}
 }
