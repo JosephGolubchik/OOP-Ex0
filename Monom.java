@@ -10,17 +10,17 @@ package myMath;
 public class Monom implements function{
 
 	/**
-	 * Default monom constructor
-	 * default coefficient and power values are zero.
+	 * Default monom constructor.
+	 * By default coefficient and power values are zero.
 	 */
 	public Monom(){
 		this.set_coefficient(0);
 		this.set_power(0);
 	}
 	/**
-	 * constructor that creates a monom from given values
-	 * @param a coefficient
-	 * @param b power
+	 * A constructor that creates a monom from a given coefficient value and a given power value.
+	 * @param a Value for coefficient.
+	 * @param b Value for power.
 	 */
 	public Monom(double a, int b){
 		if (b < 0) {
@@ -53,16 +53,17 @@ public class Monom implements function{
 		return this._power;
 	}
 	/**
-	 * gives value of monom for a certain x value
+	 * Computes the value of the current monom for a certain x value.
 	 * ex: monom: 5x^2, f(3) = 5*3^2 = 45
 	 * @param x value to be inputed into monom
+	 * @return The value of the monom at x.
 	 */
 	public double f(double x) {
 		return this.get_coefficient() * Math.pow(x, this.get_power());
 	}
 	/**
-	 * returns a monom that is the derivative of the given monom
-	 * ex: monom: 5x^2, derivative: 10x
+	 * Creates a new monom which is the derivative of the current monom.
+	 * @return The derived monom.
 	 */
 	public Monom derivative() {
 		double a = 0;
@@ -78,8 +79,8 @@ public class Monom implements function{
 		return new Monom(a,b);
 	}
 	/**
-	 * adds monom m to the given monom
-	 * @param m the monom to be added
+	 * Adds to the current monom the given monom m.
+	 * @param m Monom to be added.
 	 */
 	public void add(Monom m) {
 
@@ -88,8 +89,8 @@ public class Monom implements function{
 		}
 	}
 	/**
-	 * multiples given monom by monom x
-	 * @param x monom for given monom to be multiplied by
+	 * Multiplies the current monom by a given monom x.
+	 * @param x Monom to be multiplied by.
 	 */
 	public void multiply(Monom x) {
 
@@ -97,23 +98,27 @@ public class Monom implements function{
 		this.set_power(this.get_power()+x.get_power());
 	}
 	/**
-	 * converts monom to string
+	 * Converts the current monom to a string.
+	 * @return A string version of the current monom.
 	 */
 	public String toString() {
 		if (this.get_power() == 0) return "" + this.get_coefficient();
+		else if (this.get_coefficient() == 0) return "";
 		else if (this.get_power() == 1) return "" + this.get_coefficient() + "X";
 		else return this.get_coefficient() + "X^"+ this.get_power();
 	}
 	/**
-	 * checks if a monom is a zero monom (monom whose coefficient equals zero)
+	 * Checks whether the current monom's coefficient is zero.
+	 * @return True if the monom is a zero monom, false otherwise.
 	 */
 	public boolean isZero() {
 		return this.get_coefficient()==0;
 	}
 	/**
-	 * checks if two monoms are equal.
-	 * monoms are equal if their coefficients and powers are the same
-	 * @param m2 monom to be compared to
+	 * Checks whether the current monom is equal to a given monom m2.
+	 * Two monoms are considered equal if their coefficients and powers are equal.
+	 * @param m2 Monom to be compared to.
+	 * @return True if the monoms are equal, false otherwise.
 	 */
 	public boolean equals(Monom m2) {
 		return this.get_coefficient() == m2.get_coefficient() && this.get_power() == m2.get_power();
@@ -133,7 +138,11 @@ public class Monom implements function{
 	}
 
 	
-
+	/**
+	 * A helper function for the constructor that gets a string.
+	 * @param s String to be converted into a monom.
+	 * @return A monom constructed from the string.
+	 */
 	private static Monom init_from_string(String s){
 		if(s==null){throw new RuntimeException("ERR -> String is null");}
 		double a=0;
@@ -164,7 +173,18 @@ public class Monom implements function{
 			else{
 				try{
 					b=Integer.parseInt(in.substring(ind_p+1));
-					a = Double.parseDouble(in.substring(0,ind_x));
+					if(in.indexOf("-") == 0) {
+						if (ind_x == 1) {
+							a = -1;
+						}
+						else {
+							a = Double.parseDouble(in.substring(1,ind_x));
+
+						}
+					}
+					else {
+						a = Double.parseDouble(in.substring(0,ind_x));
+					}
 				}
 				catch(Exception e){
 					throw new RuntimeException("Invalid String");

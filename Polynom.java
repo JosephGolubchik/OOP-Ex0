@@ -20,7 +20,9 @@ import myMath.Monom;
 public class Polynom implements Polynom_able{
 
 	// ********** add your code below ***********
-	
+	/**
+	 * An arraylist that contains the monoms that make up the polynom.
+	 */
 	ArrayList<Monom> list = new ArrayList<>();
 	/**
 	 * default constructor
@@ -57,6 +59,7 @@ public class Polynom implements Polynom_able{
 	 * gives value of polynom for a certain x value
 	 * ex: polynom: 5x^2 + 3x + 2, f(3) = 5*3^2 + 3*3 + 2 = 56
 	 * @param x value to be inputed into polynom
+	 * @return The value of the polynom at x.
 	 */
 	@Override
 	public double f(double x) {
@@ -68,8 +71,8 @@ public class Polynom implements Polynom_able{
 	}
 
 	/**
-	 * adds another polynom p1 to given polynom
-	 * @param p1 polynom to be added
+	 * adds another polynom p1 to given polynom.
+	 * @param p1 polynom to be added.
 	 */
 	@Override
 	public void add(Polynom_able p1) {
@@ -80,6 +83,10 @@ public class Polynom implements Polynom_able{
 		}
 	}
 
+	/**
+	 * Adds to the current polynom the given monom m1.
+	 * @param m1 Monom to be added.
+	 */
 	@Override
 	public void add(Monom m1) {
 		boolean added = false;
@@ -96,7 +103,10 @@ public class Polynom implements Polynom_able{
 		}
 		
 	}
-
+	/**
+	 * Subtracts from the current polynom the given polynom p1.
+	 * @param p1 Polynom to be subtracted.
+	 */
 	@Override
 	public void substract(Polynom_able p1) {
 		Polynom temp = new Polynom();
@@ -113,7 +123,25 @@ public class Polynom implements Polynom_able{
 			if (x.isZero()) this.list.remove(x);
 		}
 	}
-
+	/**
+	 * Subtracts from the current polynom the given monom m1.
+	 * @param m1 Monom to be subtracted.
+	 */
+	public void substract(Monom m1) {
+		Polynom temp = new Polynom();
+		Monom mNew = new Monom(-1 * m1.get_coefficient(), m1.get_power());
+		temp.add(mNew);
+		this.add(temp);
+		Iterator<Monom> it = this.iteretor();
+		while(it.hasNext()) {
+			Monom x = it.next();
+			if (x.isZero()) this.list.remove(x);
+		}
+	}
+	/**
+	 * Multiplies the current polynom by a given polynom p1.
+	 * @param p1 Polynom to be multiplied by.
+	 */
 	@Override
 	public void multiply(Polynom_able p1) {
 		Polynom sum = new Polynom();
@@ -137,6 +165,12 @@ public class Polynom implements Polynom_able{
 		
 	}
 
+	/**
+	 * Checks whether the current polynom is equal to a given polynom p1.
+	 * Two polynoms are considered equal if their coefficients and powers are equal.
+	 * @param p1 Polynom to be compared to.
+	 * @return True if the polynoms are equal, false otherwise.
+	 */
 	@Override
 	public boolean equals(Polynom_able p1) {
 		Iterator<Monom> it1 = this.iteretor();
@@ -153,11 +187,23 @@ public class Polynom implements Polynom_able{
 		return true;
 	}
 
+	/**
+	 * Checks whether the current polynom's coefficient is zero.
+	 * @return True if the polynom is a zero polynom, false otherwise.
+	 */
 	@Override
 	public boolean isZero() {
 		return this.list.size() == 0;
 	}
 
+	/**
+	 * This function uses the Bisection Method to find a root of the polynom between x0 and x1.
+	 * https://en.wikipedia.org/wiki/Bisection_method
+	 * @param x0 The left boundary of the range.
+	 * @param x1 The right boundary of the range.
+	 * @param eps The maximum distance between x0 and x1 we will allow. The function will stop when x0 and x1 get at least this close.
+	 * @return The x value of the root.
+	 */
 	@Override
 	public double root(double x0, double x1, double eps) {
 		
@@ -183,6 +229,10 @@ public class Polynom implements Polynom_able{
 		return x0;
 	}
 
+	/**
+	 * Creates a copy of the current polynom.
+	 * @return A copy of the polynom.
+	 */
 	@Override
 	public Polynom_able copy() {
 		Polynom copy = new Polynom();
@@ -196,6 +246,10 @@ public class Polynom implements Polynom_able{
 		return copy;
 	}
 
+	/**
+	 * Creates a new polynom which is the derivative of the current polynom.
+	 * @return The derived polynom.
+	 */
 	@Override
 	public Polynom_able derivative() {
 		Polynom der = new Polynom();
@@ -208,12 +262,19 @@ public class Polynom implements Polynom_able{
 		return der;
 	}
 
+	/**
+	 * Computes the Riemann sum of the current polynom between x0 and x1.
+	 * https://en.wikipedia.org/wiki/Riemann_sum
+	 * @param x0 The left boundary of the range.
+	 * @param x1 The right boundary of the range.
+	 * @param eps The width of one rectangle.
+	 * @return The computed area value.
+	 */
 	@Override
 	public double area(double x0, double x1, double eps) {
 		if (x1 < x0) {
 			throw new RuntimeException("X0 must be smaller than X1");
 		}
-		// eps is width of rectangle
 		double sum=0;
 		for (double i = x0; i <= x1; i=i+eps) {
 			if (f(i) > 0 && f(i+eps) > 0) {
@@ -223,18 +284,22 @@ public class Polynom implements Polynom_able{
 		return sum;
 	}
 
+	/**
+	 * @return An iterator to the arraylist the contains the monoms that make up the polynom.
+	 */
 	@Override
 	public Iterator<Monom> iteretor() {
 		return this.list.iterator();
 	}
 
 	/**
-	 * If polynom is empty, return a string of the zero Monom
+	 * Converts the current polynom to a string.
+	 * @return A string version of the current polynom.
 	 */
 	public String toString() {
 		String ans;
 		if (isZero()) {
-			ans = "0.0*X^0";
+			ans = "0";
 		}
 		else {
 			ans = list.get(0).toString();
@@ -244,6 +309,12 @@ public class Polynom implements Polynom_able{
 		}
 		return ans;
 	}
+	
+	/**
+	 * A helper function for the constructor that gets a string.
+	 * @param s String to be converted into a polynom.
+	 * @return A polynom constructed from the string.
+	 */
 	private Polynom init_from_string(String s) {
 		if (s == null) {
 			throw new RuntimeException("String is empty");
@@ -254,7 +325,8 @@ public class Polynom implements Polynom_able{
 			String s_monom = string_monoms[i];
 			if (!s_monom.equals("+") ){
 				Monom m = new Monom(s_monom);
-				pnew.add(m);
+				if (m.get_coefficient() != 0)
+					pnew.add(m);
 			}
 		}
 		return pnew;
